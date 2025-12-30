@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تأكيد الحجز | فندق الاسد</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+    <!-- Header -->
+    <header>
+
+
+
+
+
+
+
+
+
+        <div class="container nav">
+            <a href="index.html" class="logo">فندق<span> الأسد</span></a>
+            <ul class="nav-links">
+                <li><a href="index.html">الرئيسية</a></li>
+                <li><a href="rooms.html">الغرف</a></li>
+                <li><a href="booking.html">الحجز</a></li>
+                <li><a href="admin.html">لوحة الإدارة</a></li>
+            </ul>
+        </div>
+    </header>
+
+    <section class="section-padding">
+        <div class="container">
+            <div style="text-align: center; margin-bottom: 40px;">
+                <h1>تأكيد طلب الحجز</h1>
+                <p style="color: var(--text-muted);">يرجى ملء البيانات التالية لإتمام عملية الحجز</p>
+            </div>
+
+            <div class="form-container">
+                <form id="booking-form">
+                    <div class="form-group">
+                        <label for="guestName">اسم النزيل بالكامل</label>
+                        <input type="text" id="guestName" required placeholder="أدخل اسمك كما في الهوية">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="guestPhone">رقم التواصل</label>
+                        <input type="tel" id="guestPhone" required placeholder="05xxxxxxxx">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="roomId">اختر الغرفة</label>
+                        <select id="roomId" required>
+                            <option value="">-- اختر الغرفة --</option>
+                            <!-- Will be populated by JS -->
+                        </select>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                        <div class="form-group">
+                            <label for="checkIn">تاريخ الدخول</label>
+                            <input type="date" id="checkIn" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="checkOut">تاريخ الخروج</label>
+                            <input type="date" id="checkOut" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="notes">ملاحظات إضافية (اختياري)</label>
+                        <textarea id="notes" rows="3" placeholder="أي طلبات خاصة..."></textarea>
+                    </div>
+
+                    <div id="booking-summary"
+                        style="margin-bottom: 20px; padding: 15px; border-radius: 8px; background: #f8fafc; display: none;">
+                        <h4 style="margin-bottom: 10px;">ملخص الحجز</h4>
+                        <p id="summary-text" style="font-size: 14px;"></p>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">تأكيد الحجز الآن</button>
+                </form>
+
+                <!-- Success Message -->
+                <div id="success-message" style="display: none; text-align: center; padding: 20px;">
+                    <div style="font-size: 50px; margin-bottom: 20px;">✅</div>
+                    <h2 style="color: #166534; margin-bottom: 15px;">تم استلام طلبك بنجاح!</h2>
+                    <p style="margin-bottom: 25px;">رقم الحجز الخاص بك هو: <strong id="booking-id"></strong></p>
+                    <a href="index.html" class="btn btn-primary">العودة للرئيسية</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div>
+                    <h3 style="color: var(--accent); margin-bottom: 15px;">فندق الأسد</h3>
+                    <div style="margin-top: 10px; display: flex; align-items: center; gap: 15px;">
+                        <img src="assets/developer.jpg" alt="المطور محمد الأسد"
+                            style="width: 50px; height: 50px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent);">
+                        <p style="font-weight: 600; font-size: 14px;">المطور: محمد الأسد</p>
+                    </div>
+                </div>
+                <div>
+                    <h4>تواصل الأمان</h4>
+                    <p style="margin-top: 15px; color: var(--text-muted); direction: ltr; text-align: right;">+967
+                        772582463</p>
+                    <p style="color: var(--text-muted); direction: ltr; text-align: right;">alasadmoh#77@gmail.com</p>
+                </div>
+            </div>
+            <div class="footer-copy">
+                جميع الحقوق محفوظة &copy; 2025 - تصميم وتطوير <strong>محمد الأسد</strong>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/data.js"></script>
+    <script>
+        const bookingForm = document.getElementById('booking-form');
+        const roomSelect = document.getElementById('roomId');
+        const successMessage = document.getElementById('success-message');
+        const bookingIdSpan = document.getElementById('booking-id');
+
+        // Populate rooms in dropdown
+        function populateRooms() {
+            const rooms = HotelData.getRooms().filter(r => r.status === 'available');
+            rooms.forEach(room => {
+                const option = document.createElement('option');
+                option.value = room.id;
+                option.textContent = `${room.typeAr} - غرفة رقم ${room.number} (${room.price} ريال)`;
+                roomSelect.appendChild(option);
+            });
+
+            // Check if room is passed in URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const roomId = urlParams.get('room');
+            if (roomId) {
+                roomSelect.value = roomId;
+            }
+        }
+
+        bookingForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            const bookingData = {
+                guestName: document.getElementById('guestName').value,
+                guestPhone: document.getElementById('guestPhone').value,
+                roomId: parseInt(document.getElementById('roomId').value),
+                checkIn: document.getElementById('checkIn').value,
+                checkOut: document.getElementById('checkOut').value,
+                notes: document.getElementById('notes').value,
+                createdAt: new Date().toISOString()
+            };
+
+            const result = HotelData.addBooking(bookingData);
+
+            // Hide form and show success
+            bookingForm.style.display = 'none';
+            successMessage.style.display = 'block';
+            bookingIdSpan.textContent = result.id;
+        });
+
+        populateRooms();
+    </script>
+</body>
+
+</html>

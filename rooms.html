@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الغرف | فندق الاسد</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+    <!-- Header -->
+    <header>
+        <div class="container nav">
+            <a href="index.html" class="logo">فندق<span> الأسد</span></a>
+            <ul class="nav-links">
+                <li><a href="index.html">الرئيسية</a></li>
+                <li><a href="rooms.html">الغرف</a></li>
+                <li><a href="booking.html">الحجز</a></li>
+                <li><a href="admin.html">لوحة الإدارة</a></li>
+            </ul>
+            <a href="booking.html" class="btn btn-accent">احجز الآن</a>
+        </div>
+    </header>
+
+    <!-- Room Selection Banner -->
+    <section class="section-padding" style="background: var(--primary); color: white; padding: 40px 0;">
+        <div class="container">
+            <h1>استكشف غرفنا</h1>
+            <p style="opacity: 0.8;">تصفح مجموعة متنوعة من الغرف والأجنحة الفاخرة</p>
+        </div>
+    </section>
+
+    <!-- Rooms List -->
+    <section class="section-padding">
+        <div class="container">
+            <!-- Filter (Optional Enhancement) -->
+            <div style="margin-bottom: 30px; display: flex; gap: 15px;">
+                <button class="btn btn-primary filter-btn active" data-filter="all">الكل</button>
+                <button class="btn btn-secondary filter-btn" data-filter="available">المتاحة فقط</button>
+            </div>
+
+            <div id="rooms-list" class="rooms-grid">
+                <!-- Will be populated by JS -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div>
+                    <h3 style="color: var(--accent); margin-bottom: 15px;">فندق الأسد</h3>
+                    <p style="color: var(--text-muted); line-height: 1.8;">مشروع تخرج - نظام إدارة فندق متكامل يعتمد على
+                        التقنيات الحديثة للمتصفح.</p>
+                    <div style="margin-top: 20px; display: flex; align-items: center; gap: 15px;">
+                        <img src="assets/developer.jpg" alt="المطور محمد الأسد"
+                            style="width: 50px; height: 50px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent);">
+                        <p style="font-weight: 600; font-size: 14px;">المطور: محمد الأسد</p>
+                    </div>
+                </div>
+                <div>
+                    <h4>تواصل معنا</h4>
+                    <p style="margin-top: 15px; color: var(--text-muted); direction: ltr; text-align: right;">+967
+                        772582463</p>
+                    <p style="color: var(--text-muted); direction: ltr; text-align: right;">alasadmoh#77@gmail.com</p>
+                </div>
+            </div>
+            <div class="footer-copy">
+                جميع الحقوق محفوظة &copy; 2025 - تصميم وتطوير <strong>محمد الأسد</strong>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/data.js"></script>
+    <script>
+        const roomsList = document.getElementById('rooms-list');
+        const filterBtns = document.querySelectorAll('.filter-btn');
+
+        function renderRooms(filter = 'all') {
+            roomsList.innerHTML = '';
+            let rooms = HotelData.getRooms();
+
+            if (filter === 'available') {
+                rooms = rooms.filter(r => r.status === 'available');
+            }
+
+            rooms.forEach(room => {
+                const card = `
+                    <div class="room-card">
+                        <div class="room-img">
+                            <img src="${room.image}" alt="${room.typeAr}">
+                            <span class="room-status ${room.status === 'available' ? 'status-available' : 'status-booked'}">
+                                ${room.status === 'available' ? 'متاحة' : 'محجوزة'}
+                            </span>
+                        </div>
+                        <div class="room-info">
+                            <h3>${room.typeAr}</h3>
+                            <p style="font-size: 14px; color: var(--text-muted); margin-bottom: 10px;">رقم الغرفة: ${room.number} | السعة: ${room.capacity} أشخاص</p>
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <span class="room-price">${room.price} ريال / ليلة</span>
+                                ${room.status === 'available' ? `<a href="booking.html?room=${room.id}" class="btn btn-primary">احجز الآن</a>` : `<button class="btn" disabled style="background: #e2e8f0; color: #94a3b8; cursor: not-allowed;">غير متاحة</button>`}
+                            </div>
+                        </div>
+                    </div>
+                `;
+                roomsList.innerHTML += card;
+            });
+        }
+
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                filterBtns.forEach(b => b.classList.remove('btn-primary'));
+                filterBtns.forEach(b => b.classList.add('btn-secondary'));
+                btn.classList.add('btn-primary');
+                btn.classList.remove('btn-secondary');
+                renderRooms(btn.dataset.filter);
+            });
+        });
+
+        // Initial render
+        renderRooms();
+    </script>
+</body>
+
+</html>

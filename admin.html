@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة الإدارة | فندق النخبة</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body style="background: #f1f5f9;">
+
+    <div class="admin-layout">
+        <!-- Sidebar -->
+        <aside class="admin-sidebar">
+            <div class="logo" style="color: white; margin-bottom: 20px;">فندق<span> الأسد</span></div>
+            <div style="margin-bottom: 30px; text-align: center;">
+                <img src="assets/developer.jpg"
+                    style="width: 80px; height: 80px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent); margin-bottom: 10px;">
+                <p style="font-size: 14px; font-weight: 600;">محمد الأسد</p>
+                <p style="font-size: 11px; color: var(--text-muted);">المطور الرئيسي</p>
+            </div>
+            <ul class="admin-nav">
+                <li><a href="#" class="active" onclick="showView('overview')">نظرة عامة</a></li>
+                <li><a href="#" onclick="showView('bookings')">إدارة الحجوزات</a></li>
+                <li><a href="#" onclick="showView('rooms')">إدارة الغرف</a></li>
+                <li><a href="index.html">العودة للموقع</a></li>
+            </ul>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="admin-content">
+            <header
+                style="background: none; box-shadow: none; padding: 10px 0 30px; display: flex; justify-content: space-between; align-items: center;">
+                <h1 id="view-title">نظرة عامة</h1>
+                <div
+                    style="background: white; padding: 10px 20px; border-radius: 8px; box-shadow: var(--shadow-sm); display: flex; align-items: center; gap: 10px;">
+                    <div style="text-align: left; direction: ltr;">
+                        <small
+                            style="display: block; color: var(--text-muted); font-size: 10px;">alasadmoh#77@gmail.com</small>
+                        <small style="display: block; color: var(--text-muted); font-size: 10px;">+967 772582463</small>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Dashboard Overview -->
+            <div id="overview-view" class="view">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <h4>إجمالي الغرف</h4>
+                        <div id="total-rooms" class="value">0</div>
+                    </div>
+                    <div id="available-rooms-card" class="stat-card">
+                        <h4>الغرف المتاحة</h4>
+                        <div id="available-rooms" class="value" style="color: #166534;">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <h4>إجمالي الحجوزات</h4>
+                        <div id="total-bookings" class="value">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <h4>حجوزات نشطة</h4>
+                        <div id="active-bookings" class="value" style="color: var(--accent);">0</div>
+                    </div>
+                </div>
+
+                <div style="background: white; padding: 25px; border-radius: 12px; box-shadow: var(--shadow-sm);">
+                    <h3 style="margin-bottom: 20px;">آخر الحجوزات</h3>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>اسم النزيل</th>
+                                <th>الغرفة</th>
+                                <th>تاريخ الدخول</th>
+                                <th>الحالة</th>
+                            </tr>
+                        </thead>
+                        <tbody id="latest-bookings-table">
+                            <!-- Populated by JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Bookings List -->
+            <div id="bookings-view" class="view" style="display: none;">
+                <div style="background: white; padding: 25px; border-radius: 12px; box-shadow: var(--shadow-sm);">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>رقم الحجز</th>
+                                <th>النزيل</th>
+                                <th>الغرفة</th>
+                                <th>التواريخ</th>
+                                <th>الحالة</th>
+                                <th>إجراءات</th>
+                            </tr>
+                        </thead>
+                        <tbody id="bookings-table-body">
+                            <!-- Populated by JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Rooms List (Admin) -->
+            <div id="rooms-view" class="view" style="display: none;">
+                <div
+                    style="background: white; padding: 25px; border-radius: 12px; box-shadow: var(--shadow-sm); margin-bottom: 30px;">
+                    <h3 style="margin-bottom: 20px;">إضافة غرفة جديدة</h3>
+                    <form id="add-room-form"
+                        style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; align-items: flex-end;">
+                        <div class="form-group" style="margin-bottom: 0;">
+                            <label>رقم الغرفة</label>
+                            <input type="text" id="new-room-number" required>
+                        </div>
+                        <div class="form-group" style="margin-bottom: 0;">
+                            <label>النوع (بالعربي)</label>
+                            <input type="text" id="new-room-type" required>
+                        </div>
+                        <div class="form-group" style="margin-bottom: 0;">
+                            <label>السعر</label>
+                            <input type="number" id="new-room-price" required>
+                        </div>
+                        <div class="form-group" style="margin-bottom: 0;">
+                            <label>السعة</label>
+                            <input type="number" id="new-room-capacity" required>
+                        </div>
+                        <button type="submit" class="btn btn-accent">إضافة</button>
+                    </form>
+                </div>
+
+                <div style="background: white; padding: 25px; border-radius: 12px; box-shadow: var(--shadow-sm);">
+                    <h3 style="margin-bottom: 20px;">قائمة الغرف الحالية</h3>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>رقم الغرفة</th>
+                                <th>النوع</th>
+                                <th>السعر</th>
+                                <th>الحالة</th>
+                                <th>إجراءات</th>
+                            </tr>
+                        </thead>
+                        <tbody id="rooms-table-body">
+                            <!-- Populated by JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="js/data.js"></script>
+    <script>
+        function showView(viewId) {
+            // Update Title
+            const titles = {
+                'overview': 'نظرة عامة',
+                'bookings': 'إدارة الحجوزات',
+                'rooms': 'إدارة الغرف'
+            };
+            document.getElementById('view-title').textContent = titles[viewId];
+
+            // Toggle Views
+            document.querySelectorAll('.view').forEach(v => v.style.display = 'none');
+            document.getElementById(viewId + '-view').style.display = 'block';
+
+            // Update Sidebar Link
+            document.querySelectorAll('.admin-nav a').forEach(a => a.classList.remove('active'));
+            event.target.classList.add('active');
+
+            // Refresh content
+            if (viewId === 'overview') updateOverview();
+            if (viewId === 'bookings') renderAllBookings();
+            if (viewId === 'rooms') renderAllRooms();
+        }
+
+        function updateOverview() {
+            const stats = HotelData.getStats();
+            document.getElementById('total-rooms').textContent = stats.totalRooms;
+            document.getElementById('available-rooms').textContent = stats.availableRooms;
+            document.getElementById('total-bookings').textContent = stats.totalBookings;
+            document.getElementById('active-bookings').textContent = stats.activeBookings;
+
+            const latestBookings = HotelData.getBookings().slice(-5).reverse();
+            const tableBody = document.getElementById('latest-bookings-table');
+            tableBody.innerHTML = '';
+
+            const rooms = HotelData.getRooms();
+
+            latestBookings.forEach(b => {
+                const room = rooms.find(r => r.id === b.roomId);
+                tableBody.innerHTML += `
+                    <tr>
+                        <td>${b.guestName}</td>
+                        <td>${room ? room.typeAr : 'N/A'}</td>
+                        <td>${b.checkIn}</td>
+                        <td><span style="padding: 4px 10px; border-radius: 4px; font-size: 12px; background: #eef2ff;">${translateStatus(b.status)}</span></td>
+                    </tr>
+                `;
+            });
+        }
+
+        function renderAllBookings() {
+            const bookings = HotelData.getBookings().reverse();
+            const rooms = HotelData.getRooms();
+            const tbody = document.getElementById('bookings-table-body');
+            tbody.innerHTML = '';
+
+            bookings.forEach(b => {
+                const room = rooms.find(r => r.id === b.roomId);
+                tbody.innerHTML += `
+                    <tr>
+                        <td>#${b.id.toString().slice(-6)}</td>
+                        <td>${b.guestName}<br><small>${b.guestPhone}</small></td>
+                        <td>${room ? room.number : 'N/A'} (${room ? room.typeAr : ''})</td>
+                        <td>${b.checkIn} إلى ${b.checkOut}</td>
+                        <td>${translateStatus(b.status)}</td>
+                        <td>
+                            ${b.status === 'pending' ? `
+                                <button onclick="changeBookingStatus(${b.id}, 'confirmed')" class="btn" style="padding: 4px 8px; font-size: 12px; background: #166534; color: white;">تأكيد</button>
+                                <button onclick="changeBookingStatus(${b.id}, 'cancelled')" class="btn" style="padding: 4px 8px; font-size: 12px; background: #991b1b; color: white;">إلغاء</button>
+                            ` : (b.status === 'confirmed' ? `
+                                <button onclick="changeBookingStatus(${b.id}, 'completed')" class="btn" style="padding: 4px 8px; font-size: 12px; background: var(--primary); color: white;">إنهاء</button>
+                            ` : '-')}
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        function renderAllRooms() {
+            const rooms = HotelData.getRooms();
+            const tbody = document.getElementById('rooms-table-body');
+            tbody.innerHTML = '';
+
+            rooms.forEach(room => {
+                tbody.innerHTML += `
+                    <tr>
+                        <td>${room.number}</td>
+                        <td>${room.typeAr}</td>
+                        <td>${room.price} ريال</td>
+                        <td><span class="room-status ${room.status === 'available' ? 'status-available' : 'status-booked'}">${room.status === 'available' ? 'متاحة' : 'محجوزة'}</span></td>
+                        <td>
+                            <button onclick="toggleRoomStatus(${room.id}, '${room.status === 'available' ? 'booked' : 'available'}')" class="btn" style="padding: 5px 10px; font-size: 12px; background: #e2e8f0;">
+                                ${room.status === 'available' ? 'حجز' : 'إتاحة'}
+                            </button>
+                            <button onclick="deleteRoom(${room.id})" class="btn" style="padding: 5px 10px; font-size: 12px; background: #fee2e2; color: #991b1b;">حذف</button>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        function changeBookingStatus(id, status) {
+            HotelData.updateBookingStatus(id, status);
+            renderAllBookings();
+        }
+
+        function toggleRoomStatus(id, status) {
+            HotelData.updateRoomStatus(id, status);
+            renderAllRooms();
+        }
+
+        function deleteRoom(id) {
+            if (confirm('هل أنت متأكد من حذف هذه الغرفة؟')) {
+                const rooms = HotelData.getRooms().filter(r => r.id !== id);
+                HotelData.saveRooms(rooms);
+                renderAllRooms();
+            }
+        }
+
+        // Add Room Form Logic
+        document.getElementById('add-room-form').addEventListener('submit', function (e) {
+            e.preventDefault();
+            const rooms = HotelData.getRooms();
+            const newRoom = {
+                id: Date.now(),
+                number: document.getElementById('new-room-number').value,
+                typeAr: document.getElementById('new-room-type').value,
+                price: parseInt(document.getElementById('new-room-price').value),
+                capacity: parseInt(document.getElementById('new-room-capacity').value),
+                status: 'available',
+                image: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=800&q=80' // Default image
+            };
+
+            rooms.push(newRoom);
+            HotelData.saveRooms(rooms);
+            this.reset();
+            renderAllRooms();
+            alert('تم إضافة الغرفة بنجاح');
+        });
+
+        function translateStatus(status) {
+            const map = {
+                'pending': 'قيد الانتظار',
+                'confirmed': 'مؤكد',
+                'cancelled': 'ملغي',
+                'completed': 'مكتمل'
+            };
+            return map[status] || status;
+        }
+
+        // Initial Load
+        updateOverview();
+    </script>
+</body>
+
+</html>
